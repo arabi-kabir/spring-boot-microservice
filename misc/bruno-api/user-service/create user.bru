@@ -1,0 +1,25 @@
+meta {
+  name: create user
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:7202/api/users/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "firstName": "arabi",
+      "lastName": "khan",
+      "email": "arabi21@gmail.com",
+      "password": "123456"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

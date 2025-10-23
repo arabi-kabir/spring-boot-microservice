@@ -1,0 +1,149 @@
+services:
+  # USER SERVICE
+  user-service:
+    image: user-service:dev
+    container_name: fitness-userservice
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      dockerfile: docker/local/Dockerfile
+      context: ../../userservice
+    ports:
+      - "7202:8080"
+    environment:
+      VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+    working_dir: /opt/app
+    volumes:
+      - ../../userservice:/opt/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+    networks:
+      - app-fitness-network
+
+  # ACTIVITY SERVICE
+  activity-service:
+    image: activity-service:dev
+    container_name: fitness-activityservice
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      dockerfile: docker/local/Dockerfile
+      context: ../../activityservice
+    ports:
+      - "7205:8080"
+    environment:
+      VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+    working_dir: /opt/app
+    volumes:
+      - ../../activityservice:/opt/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+    networks:
+      - app-fitness-network
+
+  # POSTGRES DB
+  postgres:
+    image: postgres:16
+    container_name: fitness-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: fitness
+    ports:
+      - "7203:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-fitness-network
+
+  # PG ADMIN FOR POSTGRES UI
+  pgadmin:
+    image: dpage/pgadmin4:8.13
+    container_name: fitness-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "7204:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-fitness-network
+
+  # MONGODB 8 (LOCAL)
+  mongodb:
+    image: mongo:8
+    container_name: fitness-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: app_user
+      MONGO_INITDB_ROOT_PASSWORD: app_password
+      MONGO_INITDB_DATABASE: fitness
+    ports:
+      - "7206:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-fitness-network
+
+  # MONGO EXPRESS (UI FOR MONGODB)
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: fitness-mongoexpress
+    restart: always
+    ports:
+      - "7207:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: app_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: app_password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    depends_on:
+      - mongodb
+    networks:
+      - app-fitness-network
+
+  # EUREKA
+  eureka-service:
+    image: eureka:dev
+    container_name: fitness-eureka
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      dockerfile: docker/local/Dockerfile
+      context: ../../eureka
+    ports:
+      - "7208:8080"
+    environment:
+      VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+    working_dir: /opt/app
+    volumes:
+      - ../../eureka:/opt/app
+      - ~/.m2:/root/.m2
+    networks:
+      - app-fitness-network
+
+volumes:
+  db_data:
+    driver: local
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  mongo_data:
+    driver: local
+
+networks:
+  app-fitness-network:
+    driver: bridge
+    name: app-fitness-network

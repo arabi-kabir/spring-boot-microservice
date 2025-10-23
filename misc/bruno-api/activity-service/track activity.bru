@@ -1,0 +1,31 @@
+meta {
+  name: track activity
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:7205/api/activities/track
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "userId": "12",
+      "type": "RUNNING",
+      "duration": 45,
+      "caloriesBurned": 350,
+      "startTime": "2025-08-11T14:30:00",
+      "additionalMetrics": {
+          "distance": 8.5,
+          "avgHeartRate": 120,
+          "steps": 12000
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

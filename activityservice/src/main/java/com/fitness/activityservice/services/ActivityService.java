@@ -1,0 +1,45 @@
+package com.fitness.activityservice.services;
+
+import com.fitness.activityservice.dto.ActivityRequest;
+import com.fitness.activityservice.dto.ActivityResponse;
+import com.fitness.activityservice.models.Activity;
+import com.fitness.activityservice.repository.ActivityRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@AllArgsConstructor
+public class ActivityService {
+
+    private final ActivityRepository activityRepository;
+
+    public ActivityResponse trackActivity (ActivityRequest request) {
+        Activity activity = Activity.builder()
+                .userId(request.getUserId())
+                .type(request.getType())
+                .duration(request.getDuration())
+                .caloriesBurned(request.getCaloriesBurned())
+                .startTime(request.getStartTime())
+                .additionalMetrics(request.getAdditionalMetrics())
+                .build();
+
+        Activity savedActivity = activityRepository.save(activity);
+
+        return mapActivityToActivityResponse(savedActivity);
+    }
+
+    private ActivityResponse mapActivityToActivityResponse (Activity savedActivity) {
+        ActivityResponse activityResponse = new ActivityResponse();
+        activityResponse.setId(savedActivity.getId());
+        activityResponse.setUserId(savedActivity.getUserId());
+        activityResponse.setType(savedActivity.getType());
+        activityResponse.setDuration(savedActivity.getDuration());
+        activityResponse.setStartTime(savedActivity.getStartTime());
+        activityResponse.setAdditionalMetrics(savedActivity.getAdditionalMetrics());
+        activityResponse.setCaloriesBurned(savedActivity.getCaloriesBurned());
+        activityResponse.setCreatedAt(savedActivity.getCreatedAt());
+        activityResponse.setUpdatedAt(savedActivity.getUpdatedAt());
+        return activityResponse;
+    }
+
+}

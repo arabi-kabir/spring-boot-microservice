@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: activityservice
+  data:
+    mongodb:
+      uri: mongodb://app_user:app_password@mongodb:27017/fitness?authSource=admin
+      database: fitness
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-service:8080/eureka/
