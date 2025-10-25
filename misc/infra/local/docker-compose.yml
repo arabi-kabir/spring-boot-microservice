@@ -8,14 +8,14 @@ services:
     tty: true
     build:
       dockerfile: docker/local/Dockerfile
-      context: ../../userservice
+      context: ../../../userservice
     ports:
       - "7202:8080"
     environment:
       VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
     working_dir: /opt/app
     volumes:
-      - ../../userservice:/opt/app
+      - ../../../userservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
       - postgres
@@ -31,17 +31,40 @@ services:
     tty: true
     build:
       dockerfile: docker/local/Dockerfile
-      context: ../../activityservice
+      context: ../../../activityservice
     ports:
       - "7205:8080"
     environment:
       VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
     working_dir: /opt/app
     volumes:
-      - ../../activityservice:/opt/app
+      - ../../../activityservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
       - postgres
+    networks:
+      - app-fitness-network
+
+  # AI SERVICE
+  ai-service:
+    image: ai-service:dev
+    container_name: fitness-aiservice
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      dockerfile: docker/local/Dockerfile
+      context: ../../../aiservice
+    ports:
+      - "7209:8080"
+    environment:
+      VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+    working_dir: /opt/app
+    volumes:
+      - ../../../aiservice:/opt/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - mongodb
     networks:
       - app-fitness-network
 
@@ -121,14 +144,14 @@ services:
     tty: true
     build:
       dockerfile: docker/local/Dockerfile
-      context: ../../eureka
+      context: ../../../eureka
     ports:
       - "7208:8080"
     environment:
       VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
     working_dir: /opt/app
     volumes:
-      - ../../eureka:/opt/app
+      - ../../../eureka:/opt/app
       - ~/.m2:/root/.m2
     networks:
       - app-fitness-network

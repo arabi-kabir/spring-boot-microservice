@@ -1,0 +1,16 @@
+meta {
+  name: user recommendations
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:7209/api/recommendations/user/1
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
