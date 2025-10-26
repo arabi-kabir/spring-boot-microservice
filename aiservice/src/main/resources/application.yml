@@ -8,13 +8,14 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
     consumer:
+      group-id: activity-processor-group-v3
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      group-id: activity-processor-group
       properties:
         spring.json.use.type.headers: false
-        spring.json.value.default.type: com.fitness.aiservice.model.Activity
         spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.fitness.aiservice.model.Activity
 
 eureka:
   client:

@@ -1,0 +1,16 @@
+meta {
+  name: push
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:7209/api/recommendations/push-kafka
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

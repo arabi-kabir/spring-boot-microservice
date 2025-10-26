@@ -1,6 +1,9 @@
 package com.fitness.aiservice.controller;
 
+import com.fitness.aiservice.enums.ActivityType;
+import com.fitness.aiservice.model.Activity;
 import com.fitness.aiservice.model.Recommendation;
+import com.fitness.aiservice.service.ActivityMessageListener;
 import com.fitness.aiservice.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,8 @@ public class RecommendationController {
 
     private final RecommendationService recommendationService;
 
+    private final ActivityMessageListener activityMessageListener;
+
     @GetMapping("/user/{userId}")
     private ResponseEntity<List<Recommendation>> getUserRecommendation (@PathVariable String userId) {
         return ResponseEntity.ok(recommendationService.getUserRecommendation(userId));
@@ -26,6 +31,18 @@ public class RecommendationController {
     @GetMapping("/activity/{activityId}")
     private ResponseEntity<Recommendation> getUserActivityRecommendation (@PathVariable String activityId) {
         return ResponseEntity.ok(recommendationService.getUserActivityRecommendation(activityId));
+    }
+
+
+    @GetMapping("/push-kafka")
+    private void goKafka () {
+
+        Activity a = new Activity();
+        a.setId("242");
+        a.setUserId("32423");
+        a.setType(ActivityType.CARDIO);
+
+        activityMessageListener.processActivity(a);
     }
 
 }
