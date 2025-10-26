@@ -5,6 +5,16 @@ spring:
     mongodb:
       uri: mongodb://app_user:app_password@mongodb:27017/fitness_recommendation?authSource=admin
       database: fitness_recommendation
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: activity-processor-group
+      properties:
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.fitness.aiservice.model.Activity
+        spring.json.trusted.packages: "*"
 
 eureka:
   client:

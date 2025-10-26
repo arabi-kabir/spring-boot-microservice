@@ -5,8 +5,19 @@ spring:
     mongodb:
       uri: mongodb://app_user:app_password@mongodb:27017/fitness?authSource=admin
       database: fitness
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+app:
+  kafka:
+    topic:
+      name: activity-events
 
 eureka:
   client:
     service-url:
       defaultZone: http://eureka-service:8080/eureka/
+

@@ -14,13 +14,9 @@ public class ActivityController {
 
     private final ActivityService activityService;
 
-    @GetMapping("/hello")
-    public String hello () {
-        return "hello";
-    }
-
     @PostMapping("/track")
     public ResponseEntity<ActivityResponse> trackActivity (@RequestBody ActivityRequest request) {
         return ResponseEntity.ok(activityService.trackActivity(request));
     }
+
 }
