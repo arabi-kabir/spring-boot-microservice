@@ -14,18 +14,10 @@ public class ActivityMessageListener {
 
     @KafkaListener(topics = "${kafka.topic.name}", groupId = "activity-processor-group")
     public void processActivity (Activity activity) {
-        if (activity == null) {
-            log.warn("Received null activity - skipping (likely deserialization error)");
-            return;
-        }
-        
-        try {
-            log.info("==========> Received activity from Kafka: userId={}, type={}, duration={}", 
+
+        log.info("==========> Received activity from Kafka: userId={}, type={}, duration={}",
                     activity.getUserId(), activity.getType(), activity.getDuration());
-        } catch (Exception e) {
-            log.error("Error processing activity", e);
-            throw e;
-        }
+
     }
 
 }
