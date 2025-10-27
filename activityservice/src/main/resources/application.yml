@@ -11,10 +11,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-app:
-  kafka:
-    topic:
-      name: activity-events
+kafka:
+  topic:
+    name: activity-events
 
 eureka:
   client:

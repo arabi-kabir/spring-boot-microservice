@@ -37,7 +37,7 @@ public class ActivityService {
 
         try {
             //    @Value("${app.kafka.topic.name}")
-            String topicName = "activity-events";
+            String topicName = "${app.kafka.topic.name}";
             kafkaTemplate.send(topicName, savedActivity.getUserId(), savedActivity);
         } catch (Exception e) {
             e.fillInStackTrace();
