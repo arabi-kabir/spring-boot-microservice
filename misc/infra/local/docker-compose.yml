@@ -1,4 +1,27 @@
 services:
+  # CONFIG SERVER SERVICE
+  config-server-service:
+    image: config-service:dev
+    container_name: fitness-configservice
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      dockerfile: docker/local/Dockerfile
+      context: ../../../configserver
+    ports:
+      - "7215:8888"
+    environment:
+      VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+    working_dir: /opt/app
+    volumes:
+      - ../../../configserver:/opt/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+    networks:
+      - app-fitness-network
+
   # USER SERVICE
   user-service:
     image: user-service:dev
@@ -18,6 +41,7 @@ services:
       - ../../../userservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
+      - config-server-service
       - postgres
     networks:
       - app-fitness-network
@@ -41,6 +65,7 @@ services:
       - ../../../activityservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
+      - config-server-service
       - postgres
     networks:
       - app-fitness-network
@@ -59,11 +84,14 @@ services:
       - "7209:8080"
     environment:
       VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+      GEMINI_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+      GEMINI_KEY: "AIzaSyBBOK8p18K4SldUhTx0cUjm_s3bwMDe-Ac"
     working_dir: /opt/app
     volumes:
       - ../../../aiservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
+      - config-server-service
       - mongodb
       - kafka
     networks:

@@ -33,16 +33,4 @@ public class RecommendationController {
         return ResponseEntity.ok(recommendationService.getUserActivityRecommendation(activityId));
     }
 
-
-    @GetMapping("/push-kafka")
-    private void goKafka () {
-
-        Activity a = new Activity();
-        a.setId("242");
-        a.setUserId("32423");
-        a.setType(ActivityType.CARDIO);
-
-        activityMessageListener.processActivity(a);
-    }
-
 }

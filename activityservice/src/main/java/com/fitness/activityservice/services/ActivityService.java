@@ -4,13 +4,12 @@ import com.fitness.activityservice.dto.ActivityRequest;
 import com.fitness.activityservice.dto.ActivityResponse;
 import com.fitness.activityservice.models.Activity;
 import com.fitness.activityservice.repository.ActivityRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ActivityService {
 
     private final ActivityRepository activityRepository;
@@ -36,8 +35,7 @@ public class ActivityService {
         Activity savedActivity = activityRepository.save(activity);
 
         try {
-            //    @Value("${app.kafka.topic.name}")
-            String topicName = "${app.kafka.topic.name}";
+            String topicName = "activity-events";
             kafkaTemplate.send(topicName, savedActivity.getUserId(), savedActivity);
         } catch (Exception e) {
             e.fillInStackTrace();
