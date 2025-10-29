@@ -8,7 +8,6 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
   cloud:
     config:
       fail-fast: true
@@ -20,4 +19,3 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka-service:8080/eureka/
-

@@ -18,6 +18,7 @@ services:
       - ../../../configserver:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
+      - eureka-service
       - postgres
     networks:
       - app-fitness-network
@@ -41,8 +42,12 @@ services:
       - ../../../userservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
-      - config-server-service
-      - postgres
+      eureka-service:
+        condition: service_healthy
+      config-server-service:
+        condition: service_started
+      postgres:
+        condition: service_started
     networks:
       - app-fitness-network
 
@@ -65,8 +70,12 @@ services:
       - ../../../activityservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
-      - config-server-service
-      - postgres
+      config-server-service:
+        condition: service_started
+      eureka-service:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     networks:
       - app-fitness-network
 
@@ -84,16 +93,19 @@ services:
       - "7209:8080"
     environment:
       VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
-      GEMINI_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
-      GEMINI_KEY: "AIzaSyBBOK8p18K4SldUhTx0cUjm_s3bwMDe-Ac"
     working_dir: /opt/app
     volumes:
       - ../../../aiservice:/opt/app
       - ~/.m2:/root/.m2
     depends_on:
-      - config-server-service
-      - mongodb
-      - kafka
+      config-server-service:
+        condition: service_started
+      eureka-service:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      kafka:
+        condition: service_started
     networks:
       - app-fitness-network
 
@@ -182,6 +194,11 @@ services:
     volumes:
       - ../../../eureka:/opt/app
       - ~/.m2:/root/.m2
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8080/eureka/apps" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - app-fitness-network
 

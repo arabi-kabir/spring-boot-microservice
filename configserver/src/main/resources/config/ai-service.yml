@@ -13,13 +13,16 @@ spring:
         spring.json.use.type.headers: false
         spring.json.value.default.type: com.fitness.aiservice.model.Activity
         spring.json.trusted.packages: "*"
-
   cloud:
     config:
       fail-fast: true
       retry:
         max-attempts: 10
         initial-interval: 2000
+
+kafka:
+  topic:
+    name: activity-events
 
 eureka:
   client:
