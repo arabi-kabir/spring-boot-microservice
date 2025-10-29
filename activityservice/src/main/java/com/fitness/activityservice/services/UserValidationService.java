@@ -19,6 +19,7 @@ public class UserValidationService {
                     .uri("api/users/{userId}/validate", userId)
                     .retrieve().bodyToMono(Boolean.class).block());
         } catch (WebClientResponseException e) {
+            log.error("Error while validating user: {}", userId, e);
             e.fillInStackTrace();
         }
         return false;
