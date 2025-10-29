@@ -16,7 +16,11 @@ public class ActivityMessageListener {
     private final ActivityAiService activityAiService;
     private final RecommendationRepository recommendationRepository;
 
-    @KafkaListener(topics = "activity-events", groupId = "activity-processor-group")
+    @KafkaListener(
+            topics = "activity-events",
+            groupId = "activity-processor-group",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void processActivity (Activity activity) {
         log.info("Received activity from Kafka: userId={}, type={}", activity.getUserId(), activity.getType());
 
