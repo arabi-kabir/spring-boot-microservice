@@ -270,6 +270,20 @@ services:
     networks:
       - app-fitness-network
 
+  # AUTH SERVICE (KEYCLOAK)
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: fitness-keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admino%412okay
+    ports:
+      - "7200:8080"
+    networks:
+      - app-fitness-network
+
 volumes:
   db_data:
     driver: local
