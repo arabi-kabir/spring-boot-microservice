@@ -23,6 +23,32 @@ services:
     networks:
       - app-fitness-network
 
+  # GATEWAY SERVICE
+  gateway-service:
+    image: gateway-service:dev
+    container_name: fitness-gatewayservice
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    build:
+      dockerfile: docker/local/Dockerfile
+      context: ../../../gateway
+    ports:
+      - "7212:8080"
+    environment:
+      VIRTUAL_HOST: "${API_VIRTUAL_HOST:-api.app.local}"
+    working_dir: /opt/app
+    volumes:
+      - ../../../gateway:/opt/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      eureka-service:
+        condition: service_healthy
+      config-server-service:
+        condition: service_started
+    networks:
+      - app-fitness-network
+
   # USER SERVICE
   user-service:
     image: user-service:dev
@@ -243,7 +269,6 @@ services:
       - kafka
     networks:
       - app-fitness-network
-
 
 volumes:
   db_data:

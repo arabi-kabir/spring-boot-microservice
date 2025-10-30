@@ -16,9 +16,7 @@ public class WebClientConfig {
 
     @Bean
     public WebClient userServiceWebClient (WebClient.Builder webClientBuilder) {
-        return webClientBuilder.baseUrl("http://user-service").build();
+        return webClientBuilder.baseUrl("http://USER-SERVICE").build();
     }
-
-
 
 }
