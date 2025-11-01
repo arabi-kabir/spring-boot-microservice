@@ -16,6 +16,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    private String keyClockId;
+
     @Column(nullable = false, unique = true)
     private String email;
 

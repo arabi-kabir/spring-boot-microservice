@@ -11,6 +11,8 @@ public class RegisterRequest {
     @Email
     private String email;
 
+    private String keyClockId;
+
     @NotBlank(message = "Password is required")
     @Length(min = 6, max = 20)
     private String password;

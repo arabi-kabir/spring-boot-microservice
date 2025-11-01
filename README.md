@@ -9,3 +9,5 @@
 - Kafka
 - Docker
 - Docker Compose
+- KeyClock
+- Config Server

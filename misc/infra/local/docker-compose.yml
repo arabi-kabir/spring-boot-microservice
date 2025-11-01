@@ -281,6 +281,8 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admino%412okay
     ports:
       - "7200:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
     networks:
       - app-fitness-network
 
@@ -294,6 +296,8 @@ volumes:
   mongo_data:
     driver: local
   kafka_data:
+    driver: local
+  keycloak_data:
     driver: local
 
 networks:
