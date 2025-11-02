@@ -23,6 +23,7 @@ public class UserService {
         user.setPassword(request.getPassword());
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
+        user.setKeyClockId(request.getKeyClockId());
 
         User savedUser = userRepository.save(user);
 
@@ -37,6 +38,7 @@ public class UserService {
 
     private UserResponse getUserResponse(User user) {
         UserResponse userResponse = new UserResponse();
+        userResponse.setKeyClockId(user.getKeyClockId());
         userResponse.setId(user.getId());
         userResponse.setEmail(user.getEmail());
         userResponse.setPassword(user.getPassword());
